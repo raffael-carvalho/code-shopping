@@ -3,12 +3,12 @@
 namespace CodeShopping\Http\Controllers\Api;
 
 use CodeShopping\Http\Controllers\Controller;
-use CodeShopping\Http\Requests\ProductRequest;
-use CodeShopping\Models\Product;
+use CodeShopping\Models\ProductInput;
 use Illuminate\Http\Request;
-use CodeShopping\Http\Resources\ProductResource;
+use CodeShopping\Http\Resources\ProductInputResource;
+use CodeShopping\Http\Requests\ProductInputRequest;
 
-class ProductController extends Controller
+class ProductInputController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(10);
-        return ProductResource::collection($products);
+        $inputs = ProductInput::with('product')->paginate();
+        return ProductInputResource::collection($inputs);
     }
 
     /**
@@ -37,31 +37,30 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
+    public function store(ProductInputRequest $request)
     {
-        $product = Product::create($request->all());
-        $product->refresh();
-        return new ProductResource($product);
+        $input = ProductInput::create($request->all());
+        return new ProductInputResource($input);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\Models\ProductInput  $productInput
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(ProductInput $input)
     {
-        return new ProductResource($product);
+        return new ProductInputResource($input);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\Models\ProductInput  $productInput
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(ProductInput $productInput)
     {
         //
     }
@@ -70,27 +69,22 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\Models\ProductInput  $productInput
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, Product $product)
+    public function update(Request $request, ProductInput $productInput)
     {
-        $product->fill($request->all());
-        $product->save();
-
-        return new ProductResource($product);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\Models\ProductInput  $productInput
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(ProductInput $productInput)
     {
-        $product->delete();
-
-        return response()->json([], 204);
+        //
     }
 }

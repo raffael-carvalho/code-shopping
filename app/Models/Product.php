@@ -9,7 +9,7 @@ class Product extends Model
 {
 	use Sluggable;
 	
-    protected $fillable = ['name','description','price'];
+    protected $fillable = ['name','description','price','active'];
 
     public function sluggable(): array
     {
@@ -18,5 +18,9 @@ class Product extends Model
     			'source' => 'name'
     		]
     	];
+    }
+
+    public function categories(){
+    	return $this->belongsToMany(Category::class);
     }
 }
