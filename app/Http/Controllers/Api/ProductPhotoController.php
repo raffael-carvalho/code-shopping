@@ -81,13 +81,6 @@ class ProductPhotoController extends Controller
         return new ProductPhotoResource($photo);
     }
 
-    public function assertProductPhoto(Product $product ,ProductPhoto $photo)
-    {
-        if($photo->product_id != $product->id){
-            abort(404);
-        }
-    }
-
 
     /**
      * Remove the specified resource from storage.
@@ -95,8 +88,17 @@ class ProductPhotoController extends Controller
      * @param  \CodeShopping\Models\ProductPhoto  $productPhoto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductPhoto $productPhoto)
+    public function destroy(Product $product ,ProductPhoto $photo)
     {
-        //
+        $this->assertProductPhoto($product,$photo);
+        $photo->deleteWithPhoto();
+        return response()->json([], 204);
+    }
+
+    public function assertProductPhoto(Product $product ,ProductPhoto $photo)
+    {
+        if($photo->product_id != $product->id){
+            abort(404);
+        }
     }
 }

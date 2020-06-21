@@ -2,14 +2,14 @@
 
 namespace CodeShopping\Http\Controllers\Api;
 
-use CodeShopping\Http\Controllers\Controller;
-use CodeShopping\Http\Requests\ProductRequest;
-use CodeShopping\Models\Product;
+use CodeShopping\Http\Resources\UserResource;
+use CodeShopping\User;
 use Illuminate\Http\Request;
-use CodeShopping\Http\Resources\ProductResource;
+use CodeShopping\Http\Requests\UserRequest;
+use CodeShopping\Http\Controllers\Controller;
 use Illuminate\database\Eloquent\Builder;
 
-class ProductController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,10 +18,10 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::query();
+        $query = User::query();
         $query = $this->onlyTrashedIfRequested($request,$query);
-        $products = $query->paginate(10);
-        return ProductResource::collection($products);
+        $users = $query->paginate(10);
+        return UserResource::collection($users);
     }
 
     /**
@@ -40,31 +40,30 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
+    public function store(UserRequest $request)
     {
-        $product = Product::create($request->all());
-        $product->refresh();
-        return new ProductResource($product);
+        $user = User::create($request->all());
+        return new UserResource($user);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(User $user)
     {
-        return new ProductResource($product);
+        return new UserResource($user);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(User $user)
     {
         //
     }
@@ -73,32 +72,31 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, Product $product)
+    public function update(UserRequest $request, User $user)
     {
-        $product->fill($request->all());
-        $product->save();
-
-        return new ProductResource($product);
+        $user->fill($request->all());
+        $user->save();
+        return new UserResource($user);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \CodeShopping\Models\Product  $product
+     * @param  \CodeShopping\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(User $user)
     {
-        $product->delete();
+        $user->delete();
 
         return response()->json([], 204);
     }
 
-    public function restore (Product $product){
-        $product->restore();
+    public function restore (User $user){
+        $user->restore();
         return response()->json([],204);
     }
 
